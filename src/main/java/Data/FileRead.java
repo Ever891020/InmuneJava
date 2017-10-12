@@ -9,6 +9,6 @@ package Data;
  *
  * @author ever
  */
-public class FastaRead {
+public class FileRead {
     
 }
