@@ -8,6 +8,7 @@ package Data;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,19 +20,42 @@ public class FileRead {
     
     public void leer_alineadas()
     {
-        String aux="";
-        int cont=1,tam=0,id=1;
-        Map<String, String> grupo = new HashMap<String, String>();
+        int cont;
+        //Arreglo para ubicar la posicion de las columnas de interés
+        ArrayList arregloTab=new ArrayList();
         try(BufferedReader br=new BufferedReader(new FileReader("3_Nt-sequences.txt"));)
-        {  
-            String etiqueta = null;
+        {
+            //Bandera para solo identificar los titulos de columnas
+            int titulo=0;
+            //Variable para guardar la linea leida
             String linea;
+            //Ciclo para recorrrer el archivo a leer
             while(br.ready())
             {
+                //Se lee la linea
+                linea=br.readLine();
+                //Si se lee la linea del titulo de columnas
+                if(titulo==0)
+                {
+                    arregloTab.add(buscarTab("Sequence ID",linea));
+                    arregloTab.add(buscarTab("N1-REGION start",linea));
+                    arregloTab.add(buscarTab("N1-REGION end",linea));
+                    
+                    //Se cambia el valor para solo hacerlo una vez
+                    titulo=1;
+                }
+                
                 
             }
         }catch(IOException e){
             System.out.println("Error E/S: "+e);
         }        
+    }
+    
+    //Función para buscar la posicion del tabulador de interes, retorna la posición
+    public int buscarTab(String columna,String linea)
+    {
+        
+        return 0;
     }
 }
