@@ -40,6 +40,7 @@ public class FileRead {
                     arregloTab.add(buscarTab("Sequence ID",linea));
                     arregloTab.add(buscarTab("N1-REGION start",linea));
                     arregloTab.add(buscarTab("N1-REGION end",linea));
+                    //jijitl
                     
                     //Se cambia el valor para solo hacerlo una vez
                     titulo=1;
