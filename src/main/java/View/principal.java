@@ -5,6 +5,8 @@
  */
 package View;
 
+import Data.FileRead;
+
 /**
  *
  * @author ever
@@ -16,6 +18,8 @@ public class principal {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        FileRead read=new FileRead();
+        read.readFile();
     }
     
 }

@@ -9,8 +9,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  *
@@ -18,11 +18,11 @@ import java.util.Map;
  */
 public class FileRead {
     
-    public void leer_alineadas()
+    public void readFile()
     {
-        int cont;
         //Arreglo para ubicar la posicion de las columnas de interés
-        ArrayList arregloTab=new ArrayList();
+        List<List<String>> listaM=new ArrayList();
+        ArrayList pos=new ArrayList();
         try(BufferedReader br=new BufferedReader(new FileReader("3_Nt-sequences.txt"));)
         {
             //Bandera para solo identificar los titulos de columnas
@@ -34,28 +34,66 @@ public class FileRead {
             {
                 //Se lee la linea
                 linea=br.readLine();
-                //Si se lee la linea del titulo de columnas
+                //Se convierte a arreglo la linea leida
+                String[] fila_tab=linea.split("\t");
+                //Se crea la lista
+                List<String> fila=new ArrayList();
+                //Se convierte el arreglo a lista
+                fila=Arrays.asList(fila_tab);
+                //Se buscan las columnas por nombre en la primera linea
                 if(titulo==0)
                 {
-                    arregloTab.add(buscarTab("Sequence ID",linea));
-                    arregloTab.add(buscarTab("N1-REGION start",linea));
-                    arregloTab.add(buscarTab("N1-REGION end",linea));
-                    
-                    //Se cambia el valor para solo hacerlo una vez
-                    titulo=1;
+                  //Se obtiene el arreglo con las posiciones de las columnas de interes
+                  pos=posColumnas(pos,fila);
+                  //Se cambia el valor de la bandera para solo evaluar el encabezado
+                  titulo=1;
                 }
-                
-                
+                //Se agrega la lista a la lista de listas
+                listaM.add(fila);
             }
+            System.out.println(listaM.size());
         }catch(IOException e){
             System.out.println("Error E/S: "+e);
         }        
     }
     
-    //Función para buscar la posicion del tabulador de interes, retorna la posición
-    public int buscarTab(String columna,String linea)
+    //Funcion para obtener la posicion de las columnas de interes
+    public ArrayList posColumnas(ArrayList pos,List<String> fila)
     {
-        
-        return 0;
+        int aux = fila.indexOf("N1-REGION start");
+        pos.add(aux);
+        aux=fila.indexOf("N1-REGION end");
+        pos.add(aux);
+        aux = fila.indexOf("N2-REGION start");
+        pos.add(aux);
+        aux=fila.indexOf("N2-REGION end");
+        pos.add(aux);
+        aux=fila.indexOf("P3'V start");
+        pos.add(aux);
+        aux=fila.indexOf("P3'V end");
+        pos.add(aux);
+        aux=fila.indexOf("P5'D start");
+        pos.add(aux);
+        aux=fila.indexOf("P5'D end");
+        pos.add(aux);
+        aux=fila.indexOf("P3'D start");
+        pos.add(aux);
+        aux=fila.indexOf("P3'D end");
+        pos.add(aux);
+        aux=fila.indexOf("P5'J start");
+        pos.add(aux);
+        aux=fila.indexOf("P5'J end");
+        pos.add(aux);
+        return pos;
+    }
+    
+    //Función para buscar la posicion del tabulador de interes, retorna la posición
+    public void mostrarFila(List<String> fila)
+    {
+        for (int i = 0; i < fila.size(); i++) 
+        {          
+            System.out.print(fila.get(i)+"\t");
+        }
+        System.out.println();
     }
 }
