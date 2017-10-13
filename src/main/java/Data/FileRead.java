@@ -46,7 +46,7 @@ public class FileRead {
                   //Se obtiene el arreglo con las posiciones de las columnas de interes
                   pos=posColumnas(pos,fila);
                   //Se cambia el valor de la bandera para solo evaluar el encabezado
-                  titulo=1;
+                  titulo=1;                    
                 }
                 //Se agrega la lista a la lista de listas
                 listaM.add(fila);
