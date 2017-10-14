@@ -138,10 +138,18 @@ public class FileRead {
     {
         int i=1;
         String seq=fila.get(pos);
-        Pattern pat = Pattern.compile(".*(g{4,}.{1,8}){4,}g{4}.*");
+        Pattern pat = Pattern.compile("(g{3,}.{1,7}){3,}g{3}");
         Matcher mat = pat.matcher(seq);
+        while(mat.find())
+        {
+            System.out.print(mat.start()+" ");
+                        System.out.println(mat.end());
+                        System.out.println("");
+        }
+                        
         if (mat.matches()) 
-        {            System.out.println("SI");
+        {   
+            System.out.println("SI");
             System.out.println(seq);
         }
         return fila;
