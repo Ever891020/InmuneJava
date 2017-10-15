@@ -56,7 +56,11 @@ public class FileRead {
                     fila.add("P3'V-length");
                     fila.add("P5'D-length");
                     fila.add("P3'D-length");
-                    fila.add("P5'J-length");           
+                    fila.add("P5'J-length");
+                    fila.add("Qua-1/0");
+                    fila.add("Qua-start");
+                    fila.add("Qua-end");
+                    fila.add("Qua-seq");
                 }
                 else
                 {
@@ -65,6 +69,7 @@ public class FileRead {
                     //Se buscan los quadruplex en V-D-J Region
                     fila=findQuadruplex(fila, (int) pos.get(pos.size()-1));
                 }
+                mostrarFila(fila);
                 //Se agrega la lista a la lista de listas
                 listaM.add(fila);
             }
@@ -136,21 +141,28 @@ public class FileRead {
     //Funcion para buscar quadruplex
     public List<String> findQuadruplex(List<String> fila,int pos)
     {
-        int i=1;
-        String seq=fila.get(pos);
-        Pattern pat = Pattern.compile("(g{3,}.{1,7}){3,}g{3}");
+        int pos1,pos2,ban=0;
+        String seq=fila.get(pos),aux;
+        Pattern pat = Pattern.compile("(g{3,}[^g]{1}.{0,6}){3,}g{3}");
         Matcher mat = pat.matcher(seq);
+        
         while(mat.find())
-        {
-            System.out.print(mat.start()+" ");
-                        System.out.println(mat.end());
-                        System.out.println("");
+        {            
+            pos1=mat.start();
+            pos2=mat.end();
+            aux=seq.substring(pos1, pos2);
+            fila.add("1");
+            fila.add(pos1+"");
+            fila.add(pos2+"");
+            fila.add(aux);
+            ban=1;
         }
-                        
-        if (mat.matches()) 
-        {   
-            System.out.println("SI");
-            System.out.println(seq);
+        if(!mat.find() && ban==0)
+        {
+            fila.add("0");
+            fila.add("0");
+            fila.add("0");
+            fila.add("-");
         }
         return fila;
     }
