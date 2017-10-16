@@ -23,7 +23,8 @@ public class FileRead {
         List<List<String>> listaM=new ArrayList();
     
     public void readFile()
-    {        
+    {
+        FileWrite file=new FileWrite();
         ArrayList pos=new ArrayList();
         int nLinea=1;
         try(BufferedReader br=new BufferedReader(new FileReader("3_Nt-sequences_total.txt"));)
@@ -77,7 +78,7 @@ public class FileRead {
                 //Se agrega la lista a la lista de listas
                 listaM.add(fila);
             }
-            mostrarFila();
+            file.writeSubseq8(listaM, "datosTotales");
         }catch(IOException e){
             System.out.println("Error E/S: "+e);
         }        
