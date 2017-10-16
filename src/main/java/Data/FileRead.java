@@ -19,13 +19,14 @@ import java.util.regex.Pattern;
  * @author ever
  */
 public class FileRead {
+    //Arreglo para ubicar la posicion de las columnas de interés
+        List<List<String>> listaM=new ArrayList();
     
     public void readFile()
-    {
-        //Arreglo para ubicar la posicion de las columnas de interés
-        List<List<String>> listaM=new ArrayList();
+    {        
         ArrayList pos=new ArrayList();
-        try(BufferedReader br=new BufferedReader(new FileReader("3_Nt-sequences.txt"));)
+        int nLinea=1;
+        try(BufferedReader br=new BufferedReader(new FileReader("3_Nt-sequences_total.txt"));)
         {
             //Bandera para solo identificar los titulos de columnas
             int titulo=0;
@@ -68,11 +69,15 @@ public class FileRead {
                     fila=calLong(fila,pos);
                     //Se buscan los quadruplex en V-D-J Region
                     fila=findQuadruplex(fila, (int) pos.get(pos.size()-1));
+                    //Se enumera la linea
+                    fila.set(0, nLinea+"");
+                    nLinea++;
                 }
-                mostrarFila(fila);
+                
                 //Se agrega la lista a la lista de listas
                 listaM.add(fila);
             }
+            mostrarFila();
         }catch(IOException e){
             System.out.println("Error E/S: "+e);
         }        
@@ -141,13 +146,12 @@ public class FileRead {
     //Funcion para buscar quadruplex
     public List<String> findQuadruplex(List<String> fila,int pos)
     {
-        int pos1,pos2,ban=0;
+        int pos1,pos2,cont=2;
         String seq=fila.get(pos),aux;
-        Pattern pat = Pattern.compile("(g{3,}[^g]{1}.{0,6}){3,}g{3}");
+        Pattern pat = Pattern.compile("(g{3,}.{1,7}){3,}g{3}");
         Matcher mat = pat.matcher(seq);
-        
-        while(mat.find())
-        {            
+        if(mat.find())
+        {
             pos1=mat.start();
             pos2=mat.end();
             aux=seq.substring(pos1, pos2);
@@ -155,9 +159,22 @@ public class FileRead {
             fila.add(pos1+"");
             fila.add(pos2+"");
             fila.add(aux);
-            ban=1;
-        }
-        if(!mat.find() && ban==0)
+            while(mat.find())
+            {
+                listaM.get(0).add("Qua-"+cont+"-start");
+                listaM.get(0).add("Qua-"+cont+"-end");
+                listaM.get(0).add("Qua-"+cont+"-seq");
+                pos1=mat.start();
+                pos2=mat.end();
+                aux=seq.substring(pos1, pos2);
+                fila.add(pos1+"");
+                fila.add(pos2+"");
+                fila.add(aux);
+                cont++;
+            }
+            
+        }        
+        else
         {
             fila.add("0");
             fila.add("0");
@@ -168,12 +185,15 @@ public class FileRead {
     }
     
     //Función para buscar la posicion del tabulador de interes, retorna la posición
-    public void mostrarFila(List<String> fila)
+    public void mostrarFila()
     {
-        for (int i = 0; i < fila.size(); i++) 
-        {          
-            System.out.print(fila.get(i)+"\t");
+        for (int i = 0; i < listaM.size(); i++) 
+        {
+            for (int j = 0; j < listaM.get(i).size(); j++) 
+            {
+                System.out.print(listaM.get(i).get(j)+"\t");
+            }
+            System.out.println();
         }
-        System.out.println();
     }
 }
