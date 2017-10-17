@@ -20,8 +20,8 @@ public class principal {
     public static void main(String[] args) throws IOException {
         // TODO code application logic here
         FileRead read=new FileRead();
-        read.readFile();
-        //read.calcularQuaxP();
+        //read.readFile();
+        read.calcularQuaxP();
     }
     
 }

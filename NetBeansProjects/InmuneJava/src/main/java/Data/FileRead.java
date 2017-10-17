@@ -28,7 +28,7 @@ import org.apache.poi.ss.usermodel.Row;
  */
 public class FileRead {
     //Arreglo para ubicar la posicion de las columnas de interés
-        List<List<String>> listaM=new ArrayList();
+        List<List<String>> listaM=new ArrayList<>();
     
     public void readFile()
     {
@@ -196,7 +196,7 @@ public class FileRead {
     
     public List<List<String>> leerExcel(String nombre) throws FileNotFoundException, IOException
     {
-        List<List<String>> listaT=new ArrayList();
+        List<List<String>> listaT=new ArrayList<>();
         FileInputStream file = new FileInputStream(new File(nombre));
         // Crear el objeto que tendra el libro de Excel
 	HSSFWorkbook workbook = new HSSFWorkbook(file);
@@ -215,7 +215,7 @@ public class FileRead {
 	    Iterator<Cell> cellIterator = row.cellIterator();
             //Se crea un objeto de celda
 	    Cell celda;
-            List<String> fila=new ArrayList();
+            List<String> fila=new ArrayList<>();
             //Se recorre cada fila
 	    while (cellIterator.hasNext())
             {
@@ -223,6 +223,7 @@ public class FileRead {
                 fila.add(celda.getStringCellValue());
             }
             listaT.add(fila);
+            System.out.println(listaT.get(0).get(0));
             fila.clear();
         }
         for (int i = 0; i < listaT.size(); i++) 
