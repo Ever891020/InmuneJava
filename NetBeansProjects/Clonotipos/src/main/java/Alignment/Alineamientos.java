@@ -24,7 +24,7 @@ import org.biojava.nbio.core.util.ConcurrencyTools;
  */
 public class Alineamientos {
     
-    public double alinearGlobal(String query,String target) throws CompoundNotFoundException
+    public boolean alinearGlobal(String query,String target) throws CompoundNotFoundException
     {
         DNASequence queryDNA = new DNASequence(query,  
                AmbiguityDNACompoundSet.getDNACompoundSet());
@@ -40,8 +40,14 @@ public class Alineamientos {
         SequencePair <DNASequence, NucleotideCompound> psa =
                 Alignments.getPairwiseAlignment(queryDNA, targetDNA,
                 Alignments.PairwiseSequenceAlignerType.GLOBAL, gapP, matrix);
-        
-        return (((double)psa.getNumIdenticals()/(double)query.length())*100);
+        double identidad=(((double)psa.getNumIdenticals()/(double)query.length())*100);
+        System.out.println(query.length()+" "+target.length());
+        //System.out.println(psa);
+        if(identidad>99.7)
+        {
+            return true;
+        }
+        return false;
     }
 
     public int alignmentM (List<DNASequence> lista) throws CompoundNotFoundException
