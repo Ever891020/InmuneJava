@@ -141,11 +141,5 @@ public class Procesos {
                 
             }
         }        
-    }
-    
-    public void leerSeq()
-    {
-        
-    }
-    
+    }    
 }
