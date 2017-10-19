@@ -41,10 +41,10 @@ public class Alineamientos {
                 Alignments.getPairwiseAlignment(queryDNA, targetDNA,
                 Alignments.PairwiseSequenceAlignerType.GLOBAL, gapP, matrix);
         double identidad=(((double)psa.getNumIdenticals()/(double)query.length())*100);
-        System.out.println(query.length()+" "+target.length());
         //System.out.println(psa);
         if(identidad>99.7)
         {
+            System.out.println("TRUE: "+identidad);
             return true;
         }
         return false;

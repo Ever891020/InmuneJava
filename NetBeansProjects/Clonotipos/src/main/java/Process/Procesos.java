@@ -26,9 +26,9 @@ import org.biojava.nbio.core.sequence.DNASequence;
 public class Procesos {
     
     //Lista de mapas para guardar los archivos fasta
-    List<LinkedHashMap<String,DNASequence>> list=new ArrayList();
+    List<LinkedHashMap<String,DNASequence>> list=new ArrayList<>();
     //Lista de listas de grupos formados
-    List<List<Anticuerpo>> listaGrupos=new ArrayList();
+    List<List<DNASequence>> listaGrupos=new ArrayList();
     
     
     //Funcion para cargar el directorio con los archivos fasta
@@ -48,13 +48,13 @@ public class Procesos {
             for (int x=0;x<ficheros.length;x++)
             {
                 //Se crea un mapa por cada fichero
-                LinkedHashMap<String, DNASequence> a=new LinkedHashMap<String,DNASequence>();
+                //LinkedHashMap<String, DNASequence> a=new LinkedHashMap<>();
                 //Se evaluan por tipo de cadena
                 String nombreArchivo=ficheros[x].getName();
                 if(nombreArchivo.contains(cadena))
                 {
                     //Se asigna el contenido del archivo fasta al mapa
-                    a=archivo.leerDNAfasta(ruta+ficheros[x].getName());
+                    LinkedHashMap<String, DNASequence> a=archivo.leerDNAfasta(ruta+"/"+ficheros[x].getName());
                     //Se guarda el mapa en la lista de mapas
                     list.add(a);
                 }
@@ -66,6 +66,7 @@ public class Procesos {
             
             System.out.println("El directorio no existe, revisa la ruta de entrada");                
         }
+        recorrerListaMapas();
     }
     //Funcion para recorrer la lista de mapas
     public void recorrerListaMapas() throws IOException, CompoundNotFoundException, SQLException, ClassNotFoundException
@@ -89,8 +90,7 @@ public class Procesos {
                     //Se envian las posiciones de la lista global y si evaluará la lista de grupos formada
                     recorrerMapas(i,j,grupos);
                 }
-            }
-                        
+            }                        
         }
     }
     //Lista para recorrer Mapas a comparar
@@ -98,16 +98,43 @@ public class Procesos {
     {
         //Se crea el objeto para alinear las secuencias
         Alineamientos alinear=new Alineamientos();
+        
+        //Bandera para saber si secuencia i se puede eliminar
+        boolean eliminarI=false;
+        
         //Si ya se evaluó el primer archivo con todos
         if(grupos)
         {
             //Si tiene elementos en la lista de grupos
             if(listaGrupos.size()>0)
             {
-                                                                
+                //Se crea el iterador para recorrer el primer mapa i
+                Iterator<String> it = list.get(j).keySet().iterator();
+                while(it.hasNext())
+                {
+                    //Obtengo los datos de la secuencia del mapa i
+                    String idj=it.next();
+                    DNASequence idSeqj=list.get(j).get(idj);
+                    String identificadorj= idSeqj.getOriginalHeader();
+                    //--------------------------//
+                    
+                    //Ciclo para recorrer la lista de listas
+                    for (int k = 0; k < listaGrupos.size(); k++) 
+                    {                        
+                        //Se alinean las dos secuencias, la del archivo y solo la primera de cada lista
+                        if(alinear.alinearGlobal(idSeqj.getSequenceAsString(),listaGrupos.get(k).get(0).getSequenceAsString()))
+                        {
+                            //Si pasa el filtro de identidad se agrega a la lista de grupos
+                            listaGrupos.get(k).add(idSeqj);
+                            //Se elimina la secuencia del archivo
+                            it.remove();
+                        }
+                    }
+                    
+                }                                                               
             }
         }
-
+        
         //Se crea el iterador para recorrer el primer mapa i
         Iterator<String> iti = list.get(i).keySet().iterator();
         
@@ -123,22 +150,53 @@ public class Procesos {
             //Se crea el iterador del mapa j
             Iterator<String> itj = list.get(j).keySet().iterator();
             
+            //Se crea el mapa para guardarla en el lista de grupos
+            List<DNASequence> a=new ArrayList <>();
             //Ciclo para recorrer el mapa j
             while(itj.hasNext())
             {
                 //Obtengo los datos de la secuencia del mapa i
                 String idj=itj.next();
-                DNASequence idSeqj=list.get(i).get(idj);
+                DNASequence idSeqj=list.get(j).get(idj);
                 String identificadorj= idSeqj.getOriginalHeader();
                 //--------------------------//
                 
                 //Se alinean las dos secuencias
                 if(alinear.alinearGlobal(idSeqi.getSequenceAsString(),idSeqj.getSequenceAsString()))
                 {
-                    Anticuerpo anticuerpo=new Anticuerpo();
-                    
-                }
-                
+                    eliminarI=true;
+                    //Si el mapa esta vacio, agrego las dos secuencias, una del archivo i y la j
+                    if(a.isEmpty())
+                    {
+                        //Agrego las dos secuencias
+                        a.add(idSeqi);
+                        a.add(idSeqj);
+                        
+                        //Elimino la secuencia j
+                        itj.remove();
+                        
+                    }
+                    else
+                    {
+                        //Agrego la secuencia del archivo j que cumple con el filtro
+                        a.add(idSeqj);
+                        
+                        //Elimino la secuencia del j
+                        itj.remove();
+                        
+                    }
+                }                
+            }
+            
+            //Si la secuencia i pasa el filtro de identidad
+            if(eliminarI)
+            {
+                listaGrupos.add(a);
+                System.out.println(listaGrupos.size());
+                //Se elimina la secuencia i
+                iti.remove();
+                //Se reinicia la bandera
+                eliminarI=false;
             }
         }        
     }    
