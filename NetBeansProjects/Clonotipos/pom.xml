@@ -10,4 +10,18 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.biojava</groupId>
+            <artifactId>biojava-core</artifactId>
+            <version>4.2.0</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.biojava</groupId>
+            <artifactId>biojava-alignment</artifactId>
+            <version>4.2.0</version>
+            <type>jar</type>
+        </dependency>
+    </dependencies>
 </project>
